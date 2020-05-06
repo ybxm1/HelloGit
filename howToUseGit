@@ -1,10 +1,21 @@
 1. git status: 查看工作区(项目中能看到的目录与文件)和版本库中暂存区中的文件信息
 2. git add: 把文件添加进去，实际上就是把工作区中新添加的文件或者修改过的原文件存入暂存区，如果缺少这一步，即暂存区中没有add进来的内容，则无法使用commit提交到主支或者分支中去
 
-git checkout -- file 可以丢弃工作区的修改(前提是之前已经提交过)
-                     git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。
+git checkout -- file 可以丢弃工作区的修改(前提是之前已经提交过，然后系统会将版本库中的原文件覆盖到该文件中，从而使得该文件撤销修改)，file直接写文件名字就可以了
+                     git checkout -- 其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。
+git checkout -b dev 创建并切换分支，分支名为dev
+                    $ git branch dev # 创建分支
+                    $ git checkout dev # 进入分支dev,可以使用此命令来切换分支
+                    $ git branch # 列出所有分支
+                    $ git merge dev # 将分支dev并入master中
+                    $ git branch -d dev # 非强制删除，如过还没有并入主分支，则会报错
+                    $ git branch -D dev # 强制删除分支dev，即使没有合并入主分支                    
 git reset HEAD <file> 可以丢弃暂存区的修改(即未提交之前)  # git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区
-
+git push origin dev # 将本地的dev分支上传到远程仓库，远程仓库的默认名称是origin
+git checkout -b dev origin/dev  # 创建远程origin的dev分支到本地，远程除了master主支之外还有大家所提交的分支，然后由项目创建人选取合适的分支合并入主支
+git tag v1.0 # 先切换到需要打标签的分支上，然后使用该命令就可以了
+git tag # 查看某分支下所有的标签
+git tag v0.9 f52c633 # 找到对应的commit id，然后将其和之前所有提交到内容设为v0.9标签
 
 
 # 在github上创建好一个仓库后从本地将关联仓库上传github上
@@ -12,6 +23,19 @@ git remote add origin https://github.com/ybxm1/HelloGit.git
 git push -u origin master
 
 
+暂存区是所有branch共用的，所以切换分支的时候，系统会比较当前分支下（假定当前在master下）的文件与版本库中的记录的差别（暂存区和master中所有的记录信息），如有差别，将使文件恢复到与当前分之下的版本库一致，如果在另一个分支处将暂存区中的数据提交到了其下，那么切换回master主支时，系统会比较工作区的文件与master中存储信息的差别，将工作区中的文件信息恢复到与master版本库一致的状态。
+
+
 
 问题：
 为啥我已经在github上配置好了我的公钥，但是在git push的时候还是需要输入命令
+
+2. error: Your local changes to the following files would be overwritten by checkout:
+	123
+   Please commit your changes or stash them before you switch branches.
+   Aborting
+   我在当前的master分支中修改了工作区中某个文件的内容，但是没有存入版本库，所以当我想要切换到dev分支的时候会报错，因为如果切换到了dev，那么在master中新修改的内容会被dev中的版本库中的内容覆盖掉，当再切换回master中的时候，由于原来的东西没有保存进来，所以无法复原，因此该切换操作不能被执行。
+   当master中(commit)的内容与dev分支中的内容不一样的时候，master当下的暂存区中有内容还未commit，则无法切换分支。
+
+3.当主支与侧支冲突时，想要合并，就必须在打开主支中所有与侧支冲突的文件并手动修改，然后在使用git add 和 git commit来保存对主支的修改，虽然通过这中方法将主支与侧支合并到了一起，但是在侧支中的值是不会变的，仅将侧支中的值选择性的并入了主支。
+
