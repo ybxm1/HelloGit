@@ -1,5 +1,17 @@
 1. git status: 查看工作区(项目中能看到的目录与文件)和版本库中暂存区中的文件信息
 2. git add: 把文件添加进去，实际上就是把工作区中新添加的文件或者修改过的原文件存入暂存区，如果缺少这一步，即暂存区中没有add进来的内容，则无法使用commit提交到主支或者分支中去
 
-git checkout -- file 可以丢弃工作区的修改 
+git checkout -- file 可以丢弃工作区的修改(前提是之前已经提交过)
+                     git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。
 git reset HEAD <file> 可以丢弃暂存区的修改(即未提交之前)  # git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区
+
+
+
+# 在github上创建好一个仓库后从本地将关联仓库上传github上
+git remote add origin https://github.com/ybxm1/HelloGit.git
+git push -u origin master
+
+
+
+问题：
+为啥我已经在github上配置好了我的公钥，但是在git push的时候还是需要输入命令
